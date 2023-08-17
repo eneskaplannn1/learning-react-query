@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllStudents } from "./services";
+import { getAllStudents } from "./services/services";
 
 import "./App.css";
-import AddStudentForm from "./AddStudentForm";
+import AddStudentForm from "./components/AddStudentForm";
 import { NavLink } from "react-router-dom";
-import Student from "./student";
+import Student from "./components/student";
+import { Fragment, useState } from "react";
 
 function App() {
-  const { data, isLoading, error, isError, isFetching } = useQuery({
+  const [showForm, setShowForm] = useState(false);
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: ["students"],
     queryFn: getAllStudents,
     cacheTime: 5 * 60 * 1000, // ! its default
@@ -24,9 +26,12 @@ function App() {
   return (
     <div className="container">
       <NavLink to="/deneme">deneme</NavLink>
-      <div>{students}</div>
+      <Fragment>{students}</Fragment>
       <div className="form">
-        <AddStudentForm />
+        <button onClick={() => setShowForm((prev) => !prev)}>
+          Add New User
+        </button>
+        {showForm && <AddStudentForm />}
       </div>
     </div>
   );

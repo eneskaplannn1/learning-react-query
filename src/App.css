@@ -6,3 +6,6 @@
 .form {
   margin-top: 5rem;
 }
+.student > div > button {
+  width: 50%;
+}

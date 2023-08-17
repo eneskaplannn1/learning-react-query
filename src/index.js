@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Deneme from "./deneme";
+import Deneme from "./components/deneme";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -43,7 +43,7 @@ root.render(
           },
         }}
       />
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools position="bottom-right" initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>
 );
