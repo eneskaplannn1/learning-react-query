@@ -1,0 +1,8 @@
+.student {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.form {
+  margin-top: 5rem;
+}
