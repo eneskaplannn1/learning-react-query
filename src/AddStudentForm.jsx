@@ -1,6 +1,8 @@
 import { useRef } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addStudent } from "./services";
+import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
 
 function AddStudentForm() {
   const teacherRef = useRef();
@@ -11,70 +13,99 @@ function AddStudentForm() {
   const emailRef = useRef();
   const classRef = useRef();
 
-  const { mutate, error, isError } = useMutation({
+  const queryClient = useQueryClient();
+
+  const { register, handleSubmit } = useForm();
+
+  const { mutate, isLoading } = useMutation({
     mutationFn: addStudent,
     onSuccess: (data, variables, context) => {
-      console.log("student created successfully");
-      console.log(data, variables, context);
+      queryClient.invalidateQueries({
+        queryKey: ["students"],
+      });
+      toast.success("student created successfully");
     },
     onMutate: (variables) => {
       console.log("this onMutate runs before mutateFn");
     },
+    onError: () => {
+      toast.error("student can't  created");
+    },
   });
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    mutate({
-      name: nameRef.current.value,
-      username: usernameRef.current.value,
-      teacher: teacherRef.current.value,
-      role: roleRef.current.value,
-      class: classRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
-    });
+  function handleSubmitForm(data) {
+    console.log(data);
+    mutate(data);
   }
   // if (isError) return <div>{error.response.data.message}</div>;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(handleSubmitForm)}>
       <div>
-        <label>teacher</label>
+        <label htmlFor="teacher">Teacher</label>
         <input
           type="text"
-          ref={teacherRef}
+          id="teacher"
           defaultValue="64a6a31b5605dfc0d2a121ff"
+          {...register("teacher")}
         />
       </div>
       <div>
-        <label>name</label>
-        <input type="text" ref={nameRef} />
-      </div>
-      <div>
-        <label>username</label>
-        <input type="text" ref={usernameRef} />
-      </div>
-      <div>
-        <label>password</label>
-        <input type="password" ref={passwordRef} />
-      </div>
-      <div>
-        <label>role</label>
-        <input type="text" ref={roleRef} />
-      </div>
-      <div>
-        <label>Email</label>
-        <input type="email" defaultValue="example@gmail.com" ref={emailRef} />
-      </div>
-      <div>
-        <label>Class</label>
+        <label htmlFor="name">Name</label>
         <input
+          {...register("name")}
           type="text"
-          defaultValue="64acfc9ca69d5a98b5f266fc"
-          ref={classRef}
+          id="name"
+          defaultValue="name_0"
         />
       </div>
-      <button>Add new Student</button>
+      <div>
+        <label htmlFor="username">Username</label>
+        <input
+          {...register("username")}
+          type="text"
+          id="username"
+          defaultValue="username_0"
+        />
+      </div>
+      <div>
+        <label htmlFor="password">Password</label>
+        <input
+          {...register("password")}
+          type="password"
+          id="password"
+          defaultValue="asdasdasd"
+        />
+      </div>
+      <div>
+        <label htmlFor="role">Role</label>
+        <input
+          {...register("role")}
+          type="text"
+          id="role"
+          defaultValue="Student"
+        />
+      </div>
+      <div>
+        <label htmlFor="email">Email</label>
+        <input
+          {...register("email")}
+          type="email"
+          id="email"
+          defaultValue="example@gmail.com"
+        />
+      </div>
+      <div>
+        <label htmlFor="class">Class</label>
+        <input
+          {...register("class")}
+          type="text"
+          id="class"
+          defaultValue="64acfc9ca69d5a98b5f266fc"
+        />
+      </div>
+      <button type="reset">Cancel</button>
+      <button disabled={isLoading}>Add new Student</button>
     </form>
   );
 }

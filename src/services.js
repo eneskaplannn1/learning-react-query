@@ -21,12 +21,7 @@ export const getStudent = async function (studentId) {
 };
 
 export const deleteStudent = async function (studentId) {
-  try {
-    const response = await axios.delete(
-      `http://localhost:3000/api/v1/students/${studentId}`
-    );
-    console.log("Başaryla silindi:", response.data);
-  } catch (error) {
-    throw new Error("Failed to delete student ");
-  }
+  return await axios.delete(
+    `http://localhost:3000/api/v1/students/${studentId}`
+  );
 };
